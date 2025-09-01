@@ -29,33 +29,16 @@ The final output provides a nuanced verdict (e.g., "Mostly True," "Misleading"),
 
 ---
 
-##  Fact-Checking Pipeline 🏗️
+## ## Fact-Checking Pipeline 🏗️
 
 The system follows a sophisticated pipeline to ensure a thorough and reliable analysis of every claim.
 
 ```mermaid
 graph TD
-    A[User Claim <br/>(Voice or Text)] --> B[Multi-Source Retrieval <br/>(Google Search API)];
-    B --> C[Source Vetting <br/>(Credibility Check)];
-    C --> D[Evidence Synthesis <br/>(Gemini LLM)];
-    D --> E[Interactive Verdict <br/>(Gradio UI)];
-
-    subgraph "Input Layer"
-        A
-    end
-
-    subgraph "Data Processing Core"
-        B
-        C
-    end
-
-    subgraph "AI Generation Layer"
-        D
-    end
-
-    subgraph "Output Layer"
-        E
-    end
+    A[User Claim via Voice/Text] --> B[Retrieve Info via Google Search];
+    B --> C[Vet Sources for Credibility];
+    C --> D[Synthesize Evidence with Gemini LLM];
+    D --> E[Present Interactive Verdict in UI];
 ```
 
 1.  **Claim Input:** The user submits a claim via text or voice. Voice input is converted to text using the `SpeechRecognition` library.
@@ -65,7 +48,6 @@ graph TD
 5.  **Interactive Verdict:** The final output—including the verdict, explanation, and source links—is presented to the user in a clean and interactive Gradio interface.
 
 ---
-
 ##  Technology Stack 🛠️
 
 | Technology | Description |
