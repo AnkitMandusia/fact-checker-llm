@@ -1,124 +1,138 @@
-LLM-Powered Fact Checker
-========================
+# 🔎 Automated Fact-Checker with Source Analysis
 
-This project implements a fact-checking system using large language models (LLMs), natural language processing (NLP), and vector-based retrieval. It extracts claims from text, retrieves relevant facts from a trusted fact base, and verifies the claims using an LLM. The application is built with Python and includes a Streamlit-based user interface for interactive fact-checking.
+**A robust GenAI pipeline that verifies claims against real-time information and analyzes source credibility.**
 
-Features
---------
+---
+##  Live Demo 🚀
 
-*   **Claim Extraction**: Uses spaCy to identify key claims or entities in input text.
-    
-*   **Fact Retrieval**: Employs FAISS and Sentence Transformers for efficient vector-based fact retrieval.
-    
-*   **LLM Verification**: Leverages a language model (e.g., Flan-T5-Large) to compare claims against retrieved facts and generate verdicts.
-    
-*   **Interactive UI**: Provides a Streamlit interface for users to input claims and view results.
-    
-*   **Fact Base**: Supports a customizable CSV-based fact base, with a default set of sample facts.
-    
+**[[Link to Your Live Demo on Hugging Face Spaces or other platform](https://huggingface.co/spaces/ankit005man/fact)]**
 
-Prerequisites
--------------
+---
 
-*   **Python**: Version 3.11 or higher.
-    
-*   **GPU**: Optional but recommended for faster model inference (e.g., NVIDIA GPU with CUDA support).
-    
-*   **Hugging Face Account**: Required for accessing gated models (e.g., Llama-3.2-3B-Instruct).
-    
-*   **ngrok Account**: Required for exposing the Streamlit app publicly (optional for local use).
-    
+## Project Overview 📝
 
-Installation
-------------
+This project is an advanced fact-checking tool that goes beyond a simple "true/false" verdict. When a user submits a claim, the system retrieves and analyzes information from multiple, diverse online sources in real-time. It critically evaluates the credibility of these sources before using a Large Language Model (Google Gemini) to synthesize the findings.
 
-1.  git clone cd
-    
-2.  python -m venv venvsource venv/bin/activate # On Windows: venv\\Scripts\\activate
-    
-3.  pip install -U transformerspip install --upgrade --ignore-installed blinkerpython -m spacy download en\_core\_web\_smpip install plotly dash numpypip install -q streamlit==1.32.0 pyngrokpip install spacy sentence-transformers faiss-cpu transformers torch streamlit
-    
-4.  huggingface-cli loginFollow the prompt to enter your Hugging Face token, which can be generated at [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
-    
-5.  **Set Up ngrok** (Optional):If you want to expose the Streamlit app publicly, sign up for an ngrok account and get an auth token from [https://dashboard.ngrok.com/](https://dashboard.ngrok.com/). Set the token in your environment or directly in the code (not recommended for security).
-    
+The final output provides a nuanced verdict (e.g., "Mostly True," "Misleading"), a detailed explanation, and links to the evidence, empowering users with a transparent and trustworthy analysis.
 
-Usage
------
+---
 
-1.  pip install jupyterjupyter notebookOpen fact\_checker\_llm.ipynb in your Jupyter environment.
-    
-2.  **Run the Notebook**:Execute the cells in the notebook sequentially. Key steps include:
-    
-    *   Installing dependencies.
-        
-    *   Logging in to Hugging Face.
-        
-    *   Downloading the spaCy model and other packages.
-        
-    *   Writing the app.py file for the Streamlit application.
-        
-    *   Setting up ngrok and running the Streamlit app.
-        
-3.  streamlit run app.pyAccess the app at http://localhost:8501 in your browser.
-    
-4.  from pyngrok import ngrok, confconf.get\_default().auth\_token = "your-ngrok-auth-token"ngrok.kill()public\_url = ngrok.connect(8501)print("Your Streamlit app is live at:", public\_url)!streamlit run app.py &> /dev/null &Visit the generated ngrok URL to access the app.
-    
-5.  **Interact with the App**:
-    
-    *   Enter a claim in the text area (e.g., "The Indian government has announced free electricity to all farmers starting July 2025.").
-        
-    *   Click the "Verify" button to get a JSON response with the verdict, reasoning, confidence, and evidence.
-        
-    *   Provide feedback using the "Yes" or "No" buttons.
-        
+##  Key Features ✨
 
-Fact Base
----------
+* **🗣️ Voice & Text Input:** Accepts user claims through both typed text and spoken audio for maximum accessibility.
+* **🌐 Real-Time Web Search:** Utilizes Google Search grounding to gather the latest, most relevant information from across the web.
+* **🛡️ Source Credibility Analysis:** Assesses the reliability of information sources against known fact-checking sites and reputable domains.
+* **⚖️ Nuanced Verdicts:** Provides a spectrum of ratings (e.g., True, Misleading, False) instead of a simple binary outcome.
+* **✍️ Evidence Synthesis:** A Gemini LLM generates a detailed explanation for its verdict, highlighting consensus and contradictions in the sources.
+* **🔗 Transparent Sourcing:** Every fact-check is accompanied by citations and links to the original sources used for the analysis.
+* **💾 Evidence Caching:** Stores retrieved evidence in a ChromaDB vector database to accelerate the analysis of similar future claims.
 
-The fact base is stored in facts.csv. If not present, the app creates a default fact base with sample facts about Indian government policies. To customize:
+---
 
-1.  Create a facts.csv file with a fact column containing your facts.
-    
-2.  Place it in the same directory as app.py.
-    
-3.  The app will load this file automatically.
-    
+##  Fact-Checking Pipeline 🏗️
 
-Troubleshooting
----------------
+The system follows a sophisticated pipeline to ensure a thorough and reliable analysis of every claim.
 
-*   **Model Access Error**: Ensure you have access to the gated model on Hugging Face and have logged in with huggingface-cli login.
-    
-*   **Dependency Conflicts**: If you encounter version conflicts, try installing packages in a clean virtual environment.
-    
-*   **ngrok Issues**: Verify your auth token and ensure no other ngrok tunnels are running.
-    
-*   **Streamlit Not Loading**: Check if port 8501 is free or kill the Streamlit process and restart.
-    
-*   **GPU Not Detected**: Run !nvidia-smi to confirm GPU availability. If no GPU is available, the app will use CPU (slower).
-    
+```mermaid
+graph TD
+    A[User Claim <br/>(Voice or Text)] --> B[Multi-Source Retrieval <br/>(Google Search API)];
+    B --> C[Source Vetting <br/>(Credibility Check)];
+    C --> D[Evidence Synthesis <br/>(Gemini LLM)];
+    D --> E[Interactive Verdict <br/>(Gradio UI)];
 
-Notes
------
+    subgraph "Input Layer"
+        A
+    end
 
-*   The notebook was tested in a Colab environment with a Tesla T4 GPU (CUDA 12.4). Adjust dependencies if running on a different setup.
-    
-*   The fact-checking system relies on the quality and coverage of the fact base. Expand facts.csv for better accuracy.
-    
-*   The LLM (Flan-T5-Large) is used for verdict generation. For better performance, consider using a larger model (if resources allow).
-    
-*   If the generated code snippets do not work, report issues to the [model repo](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) or [huggingface.js](https://github.com/huggingface/huggingface.js).
-    
+    subgraph "Data Processing Core"
+        B
+        C
+    end
 
-License
--------
+    subgraph "AI Generation Layer"
+        D
+    end
 
-This project is licensed under the MIT License. See the [LICENSE](https://grok.com/chat/LICENSE) file for details (if applicable).
+    subgraph "Output Layer"
+        E
+    end
+```
 
-Acknowledgments
----------------
+1.  **Claim Input:** The user submits a claim via text or voice. Voice input is converted to text using the `SpeechRecognition` library.
+2.  **Multi-Source Retrieval:** The system uses the Google Search API to find a diverse set of articles, reports, and fact-checks related to the claim.
+3.  **Source Vetting:** Before analysis, each source is evaluated for credibility based on a predefined set of reliable domains and fact-checking organizations.
+4.  **Evidence Synthesis:** The content from vetted sources is passed to the Google Gemini model. The LLM is prompted to analyze the evidence, identify consensus or contradictions, and formulate a detailed explanation.
+5.  **Interactive Verdict:** The final output—including the verdict, explanation, and source links—is presented to the user in a clean and interactive Gradio interface.
 
-*   Built with [Hugging Face Transformers](https://huggingface.co/docs/transformers), [spaCy](https://spacy.io/), [Sentence Transformers](https://www.sbert.net/), [FAISS](https://github.com/facebookresearch/faiss), and [Streamlit](https://streamlit.io/).
-    
-*   Sample facts are fictional and for demonstration purposes only.
+---
+
+##  Technology Stack 🛠️
+
+| Technology | Description |
+| :--- | :--- |
+| **Python** | The core programming language for the entire pipeline. |
+| **Gradio** | For building the simple and interactive web front-end. |
+| **Google Gemini API** | The core Large Language Model used for evidence synthesis and analysis. |
+| **LangChain** | The primary framework for orchestrating the RAG pipeline and agentic workflows. |
+| **ChromaDB** | A local vector database used for caching retrieved evidence to speed up future checks. |
+| **SpeechRecognition** | A library to convert spoken audio from the user's microphone into text. |
+| **gTTS** | (Google Text-to-Speech) Used to provide an optional audio readout of the final verdict. |
+| **Hugging Face** | For accessing sentence-transformer models used for embedding the evidence for caching. |
+
+---
+
+##  Skills Demonstrated
+
+* Speech-to-Text & Natural Language Processing
+* Grounded RAG (Retrieval-Augmented Generation) Pipelines
+* Real-Time Information Retrieval via APIs
+* AI-based Text Synthesis & Analysis
+* API Integration (Google Gemini)
+* Vector Database Caching Strategies
+
+---
+
+## ## Local Setup & Installation ⚙️
+
+To run this project locally, follow these steps:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [`https://github.com/AnkitMandusia/fact-checker-llm.git](`https://github.com/AnkitMandusia/fact-checker-llm.git)
+    cd automated-fact-checker
+    ```
+
+2.  **Set up a Python environment:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    ```
+
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Set up API Keys:**
+    You will need a Google Gemini API key. Create a `.env` file in the root directory and add your key:
+    ```
+    GEMINI_API_KEY="your_google_gemini_api_key_here"
+    ```
+
+---
+
+##  Usage ▶️
+
+Once the setup is complete, you can run the Gradio application with a single command:
+
+```bash
+python app.py
+```
+
+This will start the web server, and you can access the Automated Fact-Checker in your browser, usually at `http://127.0.0.1:7860`.
+
+---
+
+##  License 📄
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
