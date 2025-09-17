@@ -1,6 +1,6 @@
 # 🔎 Automated Fact-Checker with Source Analysis
 
-**A robust GenAI pipeline that verifies claims against real-time information and analyzes source credibility.**
+**A robust, multi-stage RAG pipeline that verifies claims against real-time web evidence, analyzes source credibility, and performs on-the-fly quality evaluation of its own output.**
 
 ---
 ##  Live Demo 🚀
@@ -11,10 +11,17 @@
 
 ## Project Overview 📝
 
-This project is an advanced fact-checking tool that goes beyond a simple "true/false" verdict. When a user submits a claim, the system retrieves and analyzes information from multiple, diverse online sources in real-time. It critically evaluates the credibility of these sources before using a Large Language Model (Google Gemini) to synthesize the findings.
+TThis project is an advanced fact-checking tool that moves beyond a simple RAG implementation to provide a truly reliable analysis. When a user submits a claim via voice or text, the system deploys a sophisticated pipeline:
 
-The final output provides a nuanced verdict (e.g., "Mostly True," "Misleading"), a detailed explanation, and links to the evidence, empowering users with a transparent and trustworthy analysis.
+1. Robust Retrieval: It uses the Tavily Search API to gather comprehensive, real-time evidence from the web.
 
+2. Credibility Analysis: It automatically vets and prioritizes sources from reputable domains.
+
+3. Reliable Synthesis: It leverages advanced prompt engineering patterns like Chain-of-Thought and Self-Consistency with the Google Gemini model to generate a nuanced, stable verdict.
+
+4. On-the-Fly Evaluation: Crucially, every generated response is then passed through the Ragas framework to score the output on key metrics like faithfulness and relevancy, providing a transparent measure of the AI's performance.
+
+The final output provides the verdict, a detailed explanation, source links, and the Ragas quality scores, offering users a transparent and trustworthy analysis.
 ---
 
 ##  Key Features ✨
@@ -22,11 +29,10 @@ The final output provides a nuanced verdict (e.g., "Mostly True," "Misleading"),
 * **🗣️ Voice & Text Input:** Accepts user claims through both typed text and spoken audio for maximum accessibility.
 * **🌐 Real-Time Web Search:** Utilizes Google Search grounding to gather the latest, most relevant information from across the web.
 * **🛡️ Source Credibility Analysis:** Assesses the reliability of information sources against known fact-checking sites and reputable domains.
-* **⚖️ Nuanced Verdicts:** Provides a spectrum of ratings (e.g., True, Misleading, False) instead of a simple binary outcome.
+* **⚖️ Nuanced Verdicts:** Provides a spectrum of ratings (e.g., True, Misleading, False) .
 * **✍️ Evidence Synthesis:** A Gemini LLM generates a detailed explanation for its verdict, highlighting consensus and contradictions in the sources.
-* **🔗 Transparent Sourcing:** Every fact-check is accompanied by citations and links to the original sources used for the analysis.
-* **💾 Evidence Caching:** Stores retrieved evidence in a ChromaDB vector database to accelerate the analysis of similar future claims.
-
+* **🔗 Self-Consistency:** Queries the LLM multiple times in parallel and selects the majority verdict to reduce the probability of factual errors and hallucinations.
+* **💾 High-Speed Caching:** Uses an in-memory FAISS vector database to cache claims and accelerate future checks of similar topics.
 ---
 
 ## ## Fact-Checking Pipeline 🏗️
@@ -56,7 +62,7 @@ graph TD
 | **Gradio** | For building the simple and interactive web front-end. |
 | **Google Gemini API** | The core Large Language Model used for evidence synthesis and analysis. |
 | **LangChain** | The primary framework for orchestrating the RAG pipeline and agentic workflows. |
-| **ChromaDB** | A local vector database used for caching retrieved evidence to speed up future checks. |
+| **FAISS** | A local vector database used for caching retrieved evidence to speed up future checks. |
 | **SpeechRecognition** | A library to convert spoken audio from the user's microphone into text. |
 | **gTTS** | (Google Text-to-Speech) Used to provide an optional audio readout of the final verdict. |
 | **Hugging Face** | For accessing sentence-transformer models used for embedding the evidence for caching. |
